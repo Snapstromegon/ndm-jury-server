@@ -88,7 +88,7 @@ app.get("/get/:jurycode", async (req, res) => {
   }
   res.send(data || null);
 });
-app.delete("/delete/:jurycode", async (req, res) => {
+app.post("/delete/:jurycode", async (req, res) => {
   await db.run(
     SQL`UPDATE registrations SET deleted = TRUE WHERE jurycode = ${req.params.jurycode}`
   );
