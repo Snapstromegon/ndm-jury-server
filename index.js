@@ -92,7 +92,7 @@ app.post("/delete/:jurycode", async (req, res) => {
   await db.run(
     SQL`UPDATE registrations SET deleted = TRUE WHERE jurycode = ${req.params.jurycode}`
   );
-  res.send("OK")
+  res.redirect(`${req.headers.referer}admin`);
 });
 
 app.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" }, (err, address) => {
