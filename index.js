@@ -87,7 +87,7 @@ app.get("/get/:jurycode", async (req, res) => {
   res.send(data || null);
 });
 
-app.listen({ port: 3000 }, (err, address) => {
+app.listen({ port: process.env.PORT || 3000 }, (err, address) => {
   if (err) {
     console.log(err);
     process.exit(1);
