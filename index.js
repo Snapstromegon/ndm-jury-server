@@ -79,6 +79,20 @@ app.post("/list", async (req, res) => {
   res.send(users);
 });
 
+app.post("/listDeleted", async (req, res) => {
+  if (req.body.password != process.env.ADMIN_PASSWORD) {
+    res.status(403);
+    return;
+  }
+  const users = await db.all(
+    SQL`SELECT * FROM registrations WHERE deleted = TRUE`
+  );
+  for (const user of users) {
+    user.judges = JSON.parse(user.judges);
+  }
+  res.send(users);
+});
+
 app.get("/get/:jurycode", async (req, res) => {
   const data = await db.get(
     SQL`SELECT * FROM registrations WHERE jurycode = ${req.params.jurycode} AND deleted = FALSE`
@@ -91,6 +105,12 @@ app.get("/get/:jurycode", async (req, res) => {
 app.post("/delete/:jurycode", async (req, res) => {
   await db.run(
     SQL`UPDATE registrations SET deleted = TRUE WHERE jurycode = ${req.params.jurycode}`
+  );
+  res.redirect(`${req.headers.referer}admin`);
+});
+app.post("/restore/:jurycode", async (req, res) => {
+  await db.run(
+    SQL`UPDATE registrations SET deleted = FALSE WHERE jurycode = ${req.params.jurycode}`
   );
   res.redirect(`${req.headers.referer}admin`);
 });
