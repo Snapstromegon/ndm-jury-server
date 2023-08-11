@@ -62,7 +62,7 @@ app.post("/save", async (req, res) => {
       updated_at = CURRENT_TIMESTAMP,
       deleted = FALSE
   `);
-  res.redirect(`${req.headers.referer}?jurycode=${juryCode}`);
+  res.redirect(`${req.headers.referer}jury?jurycode=${juryCode}`);
 });
 
 app.post("/list", async (req, res) => {
@@ -112,7 +112,7 @@ app.post("/restore/:jurycode", async (req, res) => {
   await db.run(
     SQL`UPDATE registrations SET deleted = FALSE WHERE jurycode = ${req.params.jurycode}`
   );
-  res.redirect(`${req.headers.referer}admin`);
+  res.redirect(`${req.headers.referer}jury/admin`);
 });
 
 app.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" }, (err, address) => {
