@@ -59,7 +59,8 @@ app.post("/save", async (req, res) => {
       team = ${req.body.team},
       email = ${req.body.email},
       judges = json(${JSON.stringify(judges)}),
-      updated_at = CURRENT_TIMESTAMP
+      updated_at = CURRENT_TIMESTAMP,
+      deleted = FALSE
   `);
   res.redirect(`${req.headers.referer}?jurycode=${juryCode}`);
 });
@@ -69,7 +70,9 @@ app.post("/list", async (req, res) => {
     res.status(403);
     return;
   }
-  const users = await db.all(SQL`SELECT * FROM registrations`);
+  const users = await db.all(
+    SQL`SELECT * FROM registrations WHERE deleted = FALSE`
+  );
   for (const user of users) {
     user.judges = JSON.parse(user.judges);
   }
@@ -78,12 +81,18 @@ app.post("/list", async (req, res) => {
 
 app.get("/get/:jurycode", async (req, res) => {
   const data = await db.get(
-    SQL`SELECT * FROM registrations WHERE jurycode = ${req.params.jurycode}`
+    SQL`SELECT * FROM registrations WHERE jurycode = ${req.params.jurycode} AND deleted = FALSE`
   );
   if (data) {
     data.judges = JSON.parse(data.judges);
   }
   res.send(data || null);
+});
+app.delete("/delete/:jurycode", async (req, res) => {
+  await db.run(
+    SQL`UPDATE registrations SET deleted = TRUE WHERE jurycode = ${req.params.jurycode}`
+  );
+  res.send("OK")
 });
 
 app.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" }, (err, address) => {
