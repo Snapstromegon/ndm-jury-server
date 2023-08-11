@@ -73,7 +73,6 @@ app.post("/list", async (req, res) => {
   for (const user of users) {
     user.judges = JSON.parse(user.judges);
   }
-  console.log(req)
   res.send(users);
 });
 
