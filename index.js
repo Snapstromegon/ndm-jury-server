@@ -62,7 +62,7 @@ app.post("/save", async (req, res) => {
       updated_at = CURRENT_TIMESTAMP,
       deleted = FALSE
   `);
-  res.redirect(`${req.headers.referer}jury?jurycode=${juryCode}`);
+  res.redirect(`${req.headers.referer}jury/?jurycode=${juryCode}`);
 });
 
 app.post("/list", async (req, res) => {
