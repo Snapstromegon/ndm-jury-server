@@ -106,7 +106,7 @@ app.post("/delete/:jurycode", async (req, res) => {
   await db.run(
     SQL`UPDATE registrations SET deleted = TRUE WHERE jurycode = ${req.params.jurycode}`
   );
-  res.redirect(`${req.headers.referer}admin`);
+  res.redirect(`${req.headers.referer}jury/admin`);
 });
 app.post("/restore/:jurycode", async (req, res) => {
   await db.run(
